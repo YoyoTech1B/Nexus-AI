@@ -1008,3 +1008,29 @@ footer span {
 .app[hidden] {
   display: none !important;
 }
+
+/* NEXUS AI — Perfect Login Alignment */
+#auth-screen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  min-height: 100vh !important;
+  min-height: 100dvh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+}
+
+#auth-screen .auth-card {
+  position: relative !important;
+  margin: auto !important;
+  width: 100% !important;
+  max-width: 430px !important;
+  flex-shrink: 0;
+}
+
+#auth-screen[hidden] {
+  display: none !important;
+}
