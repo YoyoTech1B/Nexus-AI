@@ -1,0 +1,17 @@
+
+{
+  "name": "Nexus AI — Intelligence Without Limits",
+  "short_name": "Nexus AI",
+  "description": "Your personal intelligent productivity platform.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#030712",
+  "theme_color": "#030712",
+  "categories": [
+    "productivity",
+    "utilities",
+    "education"
+  ]
+}
