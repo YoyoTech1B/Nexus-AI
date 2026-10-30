@@ -26,6 +26,48 @@
 </script>
 </head>
 <body>
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">N</div>
+
+    <h1>NEXUS <span>AI</span></h1>
+    <p class="auth-subtitle">INTELLIGENCE WITHOUT LIMITS</p>
+
+    <h2 id="auth-title">Welcome Back</h2>
+    <p id="auth-description">Sign in to access your command center.</p>
+
+    <form id="auth-form">
+      <input
+        type="email"
+        id="auth-email"
+        placeholder="Email address"
+        required
+      >
+
+      <input
+        type="password"
+        id="auth-password"
+        placeholder="Password"
+        minlength="6"
+        required
+      >
+
+      <button type="submit" id="auth-submit">SIGN IN</button>
+    </form>
+
+    <button type="button" id="google-signin" class="google-button">
+      Continue with Google
+    </button>
+
+    <p id="auth-error" role="alert"></p>
+
+    <p class="auth-switch">
+      <span id="auth-switch-text">Don't have an account?</span>
+      <button type="button" id="auth-toggle">Create account</button>
+    </p>
+  </div>
+</div>
+  
   <div class="app">
 
     <aside class="sidebar" id="sidebar">
