@@ -1105,3 +1105,92 @@ footer span {
   max-height: 100% !important;
   object-fit: contain !important;
 }
+/* =========================================
+   NEXUS AI — READABLE RESPONSES
+========================================= */
+
+.nexus-ai-response {
+  display: block;
+  min-width: 0;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.nexus-ai-response p {
+  margin: 0 0 14px;
+  white-space: pre-wrap;
+}
+
+.nexus-ai-response h1,
+.nexus-ai-response h2,
+.nexus-ai-response h3 {
+  color: #35d9ff;
+  margin: 20px 0 10px;
+  line-height: 1.35;
+}
+
+.nexus-ai-response ul,
+.nexus-ai-response ol {
+  padding-left: 25px;
+  margin: 10px 0 16px;
+}
+
+.nexus-ai-response li {
+  margin-bottom: 7px;
+}
+
+.nexus-ai-response strong {
+  color: #ffffff;
+}
+
+.nexus-ai-response code {
+  font-family: monospace;
+  color: #35d9ff;
+  background: #071a30;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+
+.nexus-code-block {
+  margin: 15px 0;
+  background: #030b16;
+  border: 1px solid #168bff55;
+  border-radius: 10px;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.nexus-code-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #0b1729;
+  color: #35d9ff;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.nexus-copy-code {
+  background: #168bff22;
+  color: #35d9ff;
+  border: 1px solid #168bff66;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.nexus-code-block pre {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+  white-space: pre;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.nexus-code-block pre code {
+  background: transparent;
+  padding: 0;
+  color: #d7eaff;
+}
