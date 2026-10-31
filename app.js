@@ -441,7 +441,7 @@ $("#saveResearch").addEventListener("click", () => {
    AI ASSISTANT
 ========================================= */
 
-$("#chatForm").addEventListener("submit", event => {
+$("#chatForm").addEventListener("submit", async event => {
   event.preventDefault();
 
   const input = $("#chatInput");
@@ -451,6 +451,7 @@ $("#chatForm").addEventListener("submit", event => {
 
   const container = $("#chatMessages");
 
+  // Display the user's message
   const userMessage = document.createElement("div");
   userMessage.className = "list-item";
   userMessage.style.marginBottom = "15px";
@@ -462,18 +463,55 @@ $("#chatForm").addEventListener("submit", event => {
   userMessage.append(userText);
   container.append(userMessage);
 
+  // Create the AI response area
   const response = document.createElement("div");
   response.className = "list-item";
 
   const responseText = document.createElement("span");
   responseText.className = "item-text";
-  responseText.textContent =
-    "Your message is ready, but the real AI engine has not been connected yet. We will connect it through a secure backend in a later step. Your API key will never be placed in this public JavaScript file.";
+  responseText.textContent = "NEXUS AI is thinking...";
 
   response.append(responseText);
   container.append(response);
 
   input.value = "";
+  container.scrollTop = container.scrollHeight;
+
+  try {
+    // Get the signed-in user's Firebase token
+    if (!window.nexusAuth || !window.nexusAuth.getIdToken) {
+      throw new Error("Please sign in again.");
+    }
+
+    const token = await window.nexusAuth.getIdToken();
+
+    // Send the message to the secure Cloudflare backend
+    const aiResponse = await fetch(
+      "https://nexus-ai-backend.yoyoblue30.workers.dev",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ message })
+      }
+    );
+
+    const data = await aiResponse.json();
+
+    if (!aiResponse.ok) {
+      throw new Error(data.error || "The AI request failed.");
+    }
+
+    responseText.textContent = data.reply || "NEXUS AI returned an empty response.";
+
+  } catch (error) {
+    console.error("NEXUS AI error:", error);
+    responseText.textContent =
+      "Sorry, NEXUS AI couldn't respond: " + error.message;
+  }
+
   container.scrollTop = container.scrollHeight;
 });
 
