@@ -1034,3 +1034,33 @@ footer span {
 #auth-screen[hidden] {
   display: none !important;
 }
+
+/* NEXUS AI — Use favicon.png for both logos */
+
+.brand-logo {
+  overflow: hidden;
+  background: transparent;
+  padding: 0;
+}
+
+.brand-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 10px;
+}
+
+.auth-logo {
+  overflow: hidden;
+  background: transparent;
+  padding: 0;
+}
+
+.auth-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 14px;
+}
