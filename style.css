@@ -1064,3 +1064,44 @@ footer span {
   display: block;
   border-radius: 14px;
 }
+
+
+/* FIX: Keep NEXUS logos at their intended sizes */
+
+.brand-logo {
+  width: 43px !important;
+  height: 43px !important;
+  min-width: 43px !important;
+  min-height: 43px !important;
+  max-width: 43px !important;
+  max-height: 43px !important;
+  flex: 0 0 43px !important;
+  overflow: hidden !important;
+}
+
+.brand-logo img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+}
+
+.auth-logo {
+  width: 65px !important;
+  height: 65px !important;
+  min-width: 65px !important;
+  min-height: 65px !important;
+  max-width: 65px !important;
+  max-height: 65px !important;
+  overflow: hidden !important;
+  flex: 0 0 65px !important;
+}
+
+.auth-logo img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+}
