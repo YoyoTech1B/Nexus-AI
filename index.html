@@ -339,10 +339,50 @@
           </div>
         </section>
 
-        <section class="page" id="security">
-          <div class="page-title"><div class="eyebrow">PRIVACY & PROTECTION</div><h1>Security <span>Center</span></h1><p>Manage your local workspace privacy.</p></div>
-          <div class="panel"><h3>Security overview</h3><div class="info-row"><span>AI API key</span><b>Not configured</b></div><div class="info-row"><span>Account authentication</span><b>Not configured</b></div><div class="info-row"><span>Local storage</span><b>Enabled</b></div><p>Real account security will be implemented with the secure cloud backend.</p></div>
-        </section>
+        
+<section class="page" id="security">
+  <div class="page-title">
+    <div class="eyebrow">PRIVACY & PROTECTION</div>
+    <h1>Security <span>Center</span></h1>
+    <p>Manage your NEXUS AI security and privacy.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Security overview</h3>
+
+    <div class="info-row">
+      <span>AI API key</span>
+      <b class="success">Securely stored in Cloudflare</b>
+    </div>
+
+    <div class="info-row">
+      <span>AI backend</span>
+      <b class="success">Cloudflare Worker deployed</b>
+    </div>
+
+    <div class="info-row">
+      <span>Account authentication</span>
+      <b class="success">Firebase Authentication active</b>
+    </div>
+
+    <div class="info-row">
+      <span>Local storage</span>
+      <b class="success">Enabled</b>
+    </div>
+
+    <div class="info-row">
+      <span>AI provider</span>
+      <b>Google Gemini</b>
+    </div>
+
+    <p>
+      NEXUS AI uses a secure Cloudflare backend to communicate with
+      Google Gemini. Your Gemini API key is stored as a Cloudflare
+      secret and is not exposed in the public frontend code.
+    </p>
+  </div>
+</section>
+
 
         <section class="page" id="settings">
           <div class="page-title"><div class="eyebrow">PREFERENCES</div><h1>System <span>Settings</span></h1><p>Configure your NEXUS experience.</p></div>
