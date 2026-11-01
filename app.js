@@ -498,238 +498,13 @@ $("#chatForm").addEventListener("submit", async event => {
       }
     );
 
-    
-/* =========================================
-   NEXUS AI — MESSAGE FORMATTING
-========================================= */
-
-function renderNexusMarkdown(element, markdown) {
-  element.replaceChildren();
-
-  const lines = String(markdown || "").replace(/\r\n/g, "\n").split("\n");
-
-  let codeLines = [];
-  let inCode = false;
-  let list = null;
-  let paragraph = [];
-
-  function inlineFormat(parent, text) {
-    const pattern = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g;
-    let last = 0;
-    let match;
-
-    while ((match = pattern.exec(text)) !== null) {
-      parent.append(document.createTextNode(text.slice(last, match.index)));
-
-      const token = match[0];
-      const node = token.startsWith("`")
-        ? document.createElement("code")
-        : token.startsWith("**")
-          ? document.createElement("strong")
-          : document.createElement("em");
-
-      node.textContent = token.startsWith("`")
-        ? token.slice(1, -1)
-        : token.startsWith("**")
-          ? token.slice(2, -2)
-          : token.slice(1, -1);
-
-      parent.append(node);
-      last = pattern.lastIndex;
-    }
-
-    parent.append(document.createTextNode(text.slice(last)));
-  }
-
-  function closeList() {
-    if (list) {
-      element.append(list);
-      list = null;
-    }
-  }
-
-  function closeParagraph() {
-    if (paragraph.length) {
-      const p = document.createElement("p");
-      inlineFormat(p, paragraph.join(" "));
-      element.append(p);
-      paragraph = [];
-    }
-  }
-
-  function addCodeBlock() {
-    const wrapper = document.createElement("div");
-    wrapper.className = "nexus-code-block";
-
-    const toolbar = document.createElement("div");
-    toolbar.className = "nexus-code-toolbar";
-
-    const label = document.createElement("span");
-    label.textContent = "CODE";
-
-    const copy = document.createElement("button");
-    copy.type = "button";
-    copy.className = "nexus-copy-code";
-    copy.textContent = "Copy";
-
-    const pre = document.createElement("pre");
-    const code = document.createElement("code");
-
-    code.textContent = codeLines.join("\n");
-    pre.append(code);
-
-    copy.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(code.textContent);
-        copy.textContent = "Copied!";
-        setTimeout(() => copy.textContent = "Copy", 1500);
-      } catch {
-        copy.textContent = "Copy unavailable";
-      }
-    });
-
-    toolbar.append(label, copy);
-    wrapper.append(toolbar, pre);
-    element.append(wrapper);
-    codeLines = [];
-  }
-
-  for (const line of lines) {
-    if (line.trim().startsWith("```")) {
-      closeParagraph();
-      closeList();
-
-      if (inCode) {
-        addCodeBlock();
-        inCode = false;
-      } else {
-        inCode = true;
-      }
-
-      continue;
-    }
-
-    if (inCode) {
-      codeLines.push(line);
-      continue;
-    }
-
-    const trimmed = line.trim();
-
-    if (!trimmed) {
-      closeParagraph();
-      closeList();
-      continue;
-    }
-
-    const heading = trimmed.match(/^(#{1,3})\s+(.+)$/);
-
-    if (heading) {
-      closeParagraph();
-      closeList();
-
-      const h = document.createElement("h" + heading[1].length);
-      inlineFormat(h, heading[2]);
-      element.append(h);
-      continue;
-    }
-
-    const bullet = trimmed.match(/^[-*•]\s+(.+)$/);
-    const numbered = trimmed.match(/^\d+[.)]\s+(.+)$/);
-
-    if (bullet || numbered) {
-      closeParagraph();
-
-      const type = bullet ? "ul" : "ol";
-
-      if (!list || list.tagName.toLowerCase() !== type) {
-        closeList();
-        list = document.createElement(type);
-      }
-
-      const item = document.createElement("li");
-      inlineFormat(item, (bullet || numbered)[1]);
-      list.append(item);
-      continue;
-    }
-
-    closeList();
-    paragraph.push(trimmed);
-  }
-
-  closeParagraph();
-  closeList();
-
-  if (inCode) addCodeBlock();
-}
-
-/* =========================================
-   NEXUS AI — CHAT CONNECTION
-========================================= */
-
-$("#chatForm").addEventListener("submit", async event => {
-  event.preventDefault();
-
-  const input = $("#chatInput");
-  const message = input.value.trim();
-
-  if (!message) return;
-
-  const container = $("#chatMessages");
-
-  const userMessage = document.createElement("div");
-  userMessage.className = "list-item";
-  userMessage.style.marginBottom = "15px";
-
-  const userText = document.createElement("span");
-  userText.className = "item-text";
-  userText.textContent = message;
-
-  userMessage.append(userText);
-  container.append(userMessage);
-
-  const response = document.createElement("div");
-  response.className = "list-item nexus-ai-response";
-
-  const responseText = document.createElement("div");
-  responseText.className = "item-text";
-  responseText.textContent = "NEXUS AI is thinking...";
-
-  response.append(responseText);
-  container.append(response);
-
-  input.value = "";
-  container.scrollTop = container.scrollHeight;
-
-  try {
-    if (!window.nexusAuth || !window.nexusAuth.getIdToken) {
-      throw new Error("Please sign in again.");
-    }
-
-    const token = await window.nexusAuth.getIdToken();
-
-    const aiResponse = await fetch(
-      "https://nexus-ai-backend.yoyoblue30.workers.dev",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ message })
-      }
-    );
-
     const data = await aiResponse.json();
 
     if (!aiResponse.ok) {
       throw new Error(data.error || "The AI request failed.");
     }
 
-    renderNexusMarkdown(
-      responseText,
-      data.reply || "NEXUS AI returned an empty response."
-    );
+    responseText.textContent = data.reply || "NEXUS AI returned an empty response.";
 
   } catch (error) {
     console.error("NEXUS AI error:", error);
@@ -739,3 +514,204 @@ $("#chatForm").addEventListener("submit", async event => {
 
   container.scrollTop = container.scrollHeight;
 });
+
+/* =========================================
+   CALCULATOR
+========================================= */
+
+function calculateExpression(expression) {
+  const input = expression.replace(/\s+/g, "");
+
+  if (!input || !/^[0-9+\-*/().%]+$/.test(input)) {
+    throw new Error("Only basic arithmetic is supported.");
+  }
+
+  let position = 0;
+
+  function parseExpression() {
+    let value = parseTerm();
+
+    while (input[position] === "+" || input[position] === "-") {
+      const operator = input[position++];
+      const next = parseTerm();
+      value = operator === "+" ? value + next : value - next;
+    }
+
+    return value;
+  }
+
+  function parseTerm() {
+    let value = parseFactor();
+
+    while (
+      input[position] === "*" ||
+      input[position] === "/" ||
+      input[position] === "%"
+    ) {
+      const operator = input[position++];
+      const next = parseFactor();
+
+      if ((operator === "/" || operator === "%") && next === 0) {
+        throw new Error("Cannot divide by zero.");
+      }
+
+      if (operator === "*") value *= next;
+      if (operator === "/") value /= next;
+      if (operator === "%") value %= next;
+    }
+
+    return value;
+  }
+
+  function parseFactor() {
+    if (input[position] === "+") {
+      position++;
+      return parseFactor();
+    }
+
+    if (input[position] === "-") {
+      position++;
+      return -parseFactor();
+    }
+
+    let value;
+
+    if (input[position] === "(") {
+      position++;
+      value = parseExpression();
+
+      if (input[position] !== ")") {
+        throw new Error("Missing closing bracket.");
+      }
+
+      position++;
+    } else {
+      const start = position;
+
+      while (/[0-9.]/.test(input[position] || "")) {
+        position++;
+      }
+
+      const number = input.slice(start, position);
+
+      if (!number || !/^(?:\d+\.?\d*|\.\d+)$/.test(number)) {
+        throw new Error("Invalid expression.");
+      }
+
+      value = Number(number);
+    }
+
+    return value;
+  }
+
+  const result = parseExpression();
+
+  if (position !== input.length || !Number.isFinite(result)) {
+    throw new Error("Invalid calculation.");
+  }
+
+  return result;
+}
+
+$("#calculateBtn").addEventListener("click", () => {
+  try {
+    const result = calculateExpression($("#calcInput").value);
+    $("#calcResult").textContent = `Result: ${result}`;
+  } catch (error) {
+    $("#calcResult").textContent = error.message;
+  }
+});
+
+/* =========================================
+   WORD COUNTER
+========================================= */
+
+$("#wordInput").addEventListener("input", () => {
+  const text = $("#wordInput").value.trim();
+
+  const words = text
+    ? text.split(/\s+/).filter(Boolean).length
+    : 0;
+
+  const characters = $("#wordInput").value.length;
+
+  $("#wordResult").textContent =
+    `${words} words · ${characters} characters`;
+});
+
+/* =========================================
+   DATA EXPORT
+========================================= */
+
+$("#exportData").addEventListener("click", () => {
+  const backup = {
+    application: "NEXUS AI",
+    version: "1.0.0",
+    exportedAt: new Date().toISOString(),
+    tasks,
+    notes,
+    research,
+    activity
+  };
+
+  const blob = new Blob(
+    [JSON.stringify(backup, null, 2)],
+    { type: "application/json" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "nexus-ai-backup.json";
+  link.click();
+
+  URL.revokeObjectURL(url);
+  recordActivity("Exported a workspace backup.");
+});
+
+/* =========================================
+   CLEAR WORKSPACE
+========================================= */
+
+$("#clearData").addEventListener("click", () => {
+  const confirmed = confirm(
+    "Are you sure? This will permanently clear your locally saved NEXUS tasks, notes, research and activity."
+  );
+
+  if (!confirmed) return;
+
+  Object.values(STORAGE_KEYS).forEach(key => {
+    localStorage.removeItem(key);
+  });
+
+  tasks = [];
+  notes = [];
+  research = [];
+  activity = [];
+
+  renderTasks();
+  renderNotes();
+  renderResearch();
+  renderActivity();
+  updateDashboard();
+
+  alert("Your local workspace data has been cleared.");
+});
+
+/* =========================================
+   INITIALIZE APPLICATION
+========================================= */
+
+function initializeNexus() {
+  updateDashboard();
+  renderTasks();
+  renderNotes();
+  renderResearch();
+  renderActivity();
+  refreshIcons();
+
+  console.log("NEXUS AI application initialized.");
+}
+
+initializeNexus();
