@@ -1,4 +1,3 @@
-
 "use strict";
 
 /* =========================================
@@ -438,7 +437,161 @@ $("#saveResearch").addEventListener("click", () => {
 });
 
 /* =========================================
-   AI ASSISTANT
+   AI ASSISTANT — RESPONSE FORMATTER
+========================================= */
+
+function renderNexusMarkdown(target, markdown) {
+  target.replaceChildren();
+  target.classList.add("nexus-ai-response");
+
+  const lines = String(markdown).replace(/\r\n?/g, "\n").split("\n");
+
+  let paragraph = [];
+  let list = null;
+  let codeLines = [];
+  let inCode = false;
+
+  function appendInline(parent, value) {
+    const pattern = /(\*\*[^*]+\*\*|`[^`]+`)/g;
+    let last = 0;
+    let match;
+
+    while ((match = pattern.exec(value)) !== null) {
+      parent.append(
+        document.createTextNode(value.slice(last, match.index))
+      );
+
+      const token = match[0];
+
+      const element = document.createElement(
+        token.startsWith("**") ? "strong" : "code"
+      );
+
+      element.textContent = token.startsWith("**")
+        ? token.slice(2, -2)
+        : token.slice(1, -1);
+
+      parent.append(element);
+      last = pattern.lastIndex;
+    }
+
+    parent.append(document.createTextNode(value.slice(last)));
+  }
+
+  function flushParagraph() {
+    if (!paragraph.length) return;
+
+    const p = document.createElement("p");
+    appendInline(p, paragraph.join(" "));
+    target.append(p);
+
+    paragraph = [];
+  }
+
+  function closeList() {
+    if (list) {
+      target.append(list);
+      list = null;
+    }
+  }
+
+  for (const line of lines) {
+    if (line.trim().startsWith("```")) {
+      flushParagraph();
+      closeList();
+
+      if (inCode) {
+        const block = document.createElement("div");
+        block.className = "nexus-code-block";
+
+        const pre = document.createElement("pre");
+        const code = document.createElement("code");
+
+        code.textContent = codeLines.join("\n");
+
+        pre.append(code);
+        block.append(pre);
+        target.append(block);
+
+        codeLines = [];
+        inCode = false;
+      } else {
+        inCode = true;
+      }
+
+      continue;
+    }
+
+    if (inCode) {
+      codeLines.push(line);
+      continue;
+    }
+
+    const trimmed = line.trim();
+
+    if (!trimmed) {
+      flushParagraph();
+      closeList();
+      continue;
+    }
+
+    const heading = trimmed.match(/^(#{1,3})\s+(.+)$/);
+
+    if (heading) {
+      flushParagraph();
+      closeList();
+
+      const h = document.createElement("h" + heading[1].length);
+      appendInline(h, heading[2]);
+      target.append(h);
+
+      continue;
+    }
+
+    const bullet = trimmed.match(/^[-*]\s+(.+)$/);
+    const numbered = trimmed.match(/^\d+[.)]\s+(.+)$/);
+
+    if (bullet || numbered) {
+      flushParagraph();
+
+      const tag = bullet ? "ul" : "ol";
+
+      if (!list || list.tagName.toLowerCase() !== tag) {
+        closeList();
+        list = document.createElement(tag);
+      }
+
+      const li = document.createElement("li");
+      appendInline(li, (bullet || numbered)[1]);
+      list.append(li);
+
+      continue;
+    }
+
+    closeList();
+    paragraph.push(trimmed);
+  }
+
+  if (inCode) {
+    const block = document.createElement("div");
+    block.className = "nexus-code-block";
+
+    const pre = document.createElement("pre");
+    const code = document.createElement("code");
+
+    code.textContent = codeLines.join("\n");
+
+    pre.append(code);
+    block.append(pre);
+    target.append(block);
+  }
+
+  flushParagraph();
+  closeList();
+}
+
+/* =========================================
+   AI ASSISTANT — CHAT CONNECTION
 ========================================= */
 
 $("#chatForm").addEventListener("submit", async event => {
@@ -504,10 +657,14 @@ $("#chatForm").addEventListener("submit", async event => {
       throw new Error(data.error || "The AI request failed.");
     }
 
-    responseText.textContent = data.reply || "NEXUS AI returned an empty response.";
+    renderNexusMarkdown(
+      responseText,
+      data.reply || "NEXUS AI returned an empty response."
+    );
 
   } catch (error) {
     console.error("NEXUS AI error:", error);
+
     responseText.textContent =
       "Sorry, NEXUS AI couldn't respond: " + error.message;
   }
@@ -534,6 +691,7 @@ function calculateExpression(expression) {
     while (input[position] === "+" || input[position] === "-") {
       const operator = input[position++];
       const next = parseTerm();
+
       value = operator === "+" ? value + next : value - next;
     }
 
