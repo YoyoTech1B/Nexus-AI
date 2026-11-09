@@ -6,6 +6,10 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "any",
   "background_color": "#030712",
   "theme_color": "#030712",
@@ -13,5 +17,13 @@
     "productivity",
     "utilities",
     "education"
+  ],
+  "icons": [
+    {
+      "src": "./favicon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
   ]
 }
