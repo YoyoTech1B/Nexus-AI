@@ -873,3 +873,77 @@ function initializeNexus() {
 }
 
 initializeNexus();
+
+/* =========================================
+   NEXUS AI — APP INSTALL EXPERIENCE
+========================================= */
+
+let nexusInstallPrompt = null;
+
+function nexusIsInstalled() {
+  return window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+}
+
+function nexusUpdateInstallButtons() {
+  const installed = nexusIsInstalled();
+
+  document.querySelectorAll("[data-install-app]").forEach(button => {
+    button.textContent = installed
+      ? "✓ APP INSTALLED"
+      : "↓ DOWNLOAD NEXUS AI";
+
+    button.disabled = installed;
+    button.classList.toggle("is-installed", installed);
+  });
+
+  const hint = document.getElementById("installHint");
+
+  if (hint && installed) {
+    hint.textContent = "NEXUS AI is installed on this device.";
+  }
+}
+
+function nexusShowInstallHelp() {
+  const ua = navigator.userAgent || "";
+  const isIOS = /iPad|iPhone|iPod/.test(ua) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  if (isIOS) {
+    alert("To install NEXUS AI:\n\n1. Open this website in Safari.\n2. Tap Share.\n3. Choose Add to Home Screen.\n4. Tap Add.");
+  } else if (/Android/i.test(ua)) {
+    alert("To install NEXUS AI:\n\nOpen this website in Chrome, tap the menu (⋮), then choose Install app or Add to Home screen.");
+  } else {
+    alert("Your browser has not offered the install prompt yet.\n\nOpen NEXUS AI over HTTPS in Chrome or Edge and use the browser's Install option.");
+  }
+}
+
+window.addEventListener("beforeinstallprompt", event => {
+  event.preventDefault();
+  nexusInstallPrompt = event;
+});
+
+document.querySelectorAll("[data-install-app]").forEach(button => {
+  button.addEventListener("click", async () => {
+    if (nexusIsInstalled()) {
+      nexusUpdateInstallButtons();
+      return;
+    }
+
+    if (!nexusInstallPrompt) {
+      nexusShowInstallHelp();
+      return;
+    }
+
+    nexusInstallPrompt.prompt();
+    await nexusInstallPrompt.userChoice;
+    nexusInstallPrompt = null;
+  });
+});
+
+window.addEventListener("appinstalled", () => {
+  nexusInstallPrompt = null;
+  nexusUpdateInstallButtons();
+});
+
+nexusUpdateInstallButtons();
