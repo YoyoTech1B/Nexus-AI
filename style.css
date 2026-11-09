@@ -1194,3 +1194,92 @@ footer span {
   padding: 0;
   color: #d7eaff;
 }
+
+/* =========================================
+   NEXUS AI — APP INSTALL BUTTONS
+========================================= */
+
+.download-app-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid rgba(53, 217, 255, .55);
+  border-radius: 11px;
+  background: linear-gradient(110deg, #0878ed, #12b8e8);
+  color: #03101f;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+  cursor: pointer;
+  box-shadow: 0 8px 26px rgba(22, 139, 255, .2);
+  transition: transform .2s ease, filter .2s ease, box-shadow .2s ease;
+}
+
+.download-app-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.12);
+  box-shadow: 0 10px 30px rgba(22, 139, 255, .32);
+}
+
+.download-app-btn:disabled {
+  cursor: default;
+  opacity: .8;
+}
+
+.download-app-btn.is-installed {
+  background: #123c39;
+  color: #69e7b6;
+  border-color: #35dfa0;
+  box-shadow: none;
+}
+
+.install-hint {
+  margin: 10px 0 18px !important;
+  color: #8294ac !important;
+  font-size: 11px !important;
+  text-align: center;
+}
+
+.top-download-btn {
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 9px;
+  letter-spacing: .7px;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .topbar {
+    padding: 0 14px;
+    gap: 8px;
+  }
+
+  .top-actions {
+    gap: 7px;
+  }
+
+  .top-actions .status {
+    display: none;
+  }
+
+  .top-download-btn {
+    min-height: 34px;
+    padding: 0 9px;
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 420px) {
+  .top-download-btn {
+    max-width: 118px;
+    white-space: normal;
+    line-height: 1.2;
+  }
+
+  .breadcrumb {
+    font-size: 10px;
+  }
+}
