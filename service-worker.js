@@ -1,14 +1,15 @@
 
 "use strict";
 
-const CACHE_NAME = "nexus-ai-v1";
+const CACHE_NAME = "nexus-ai-v2";
 
 const APP_FILES = [
   "./",
   "./index.html",
   "./style.css",
   "./app.js",
-  "./manifest.json"
+  "./manifest.json",
+  "./favicon.png"
 ];
 
 self.addEventListener("install", event => {
