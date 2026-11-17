@@ -1,47 +1,87 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#030712">
-  <meta name="description" content="NEXUS AI - Your personal intelligent workspace.">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="NEXUS AI - Your personal intelligent workspace for tasks, notes, planning and research.">
+  <meta property="og:title" content="NEXUS AI — Intelligence Without Limits">
+  <meta property="og:description" content="Your personal intelligent workspace.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="./favicon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="NEXUS AI">
   <title>NEXUS AI — Intelligence Without Limits</title>
+
   <link rel="icon" type="image/png" href="./favicon.png?v=1">
-  <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="style.css">
+  <link rel="apple-touch-icon" href="./favicon.png">
   <link rel="manifest" href="manifest.json">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Small accessibility helpers (work independently of style.css) -->
+  <style>
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+    .skip-link {
+      position: absolute; left: 12px; top: -48px; z-index: 10000;
+      padding: 10px 16px; border-radius: 8px;
+      background: #2563eb; color: #fff; font-weight: 600; text-decoration: none;
+      transition: top .15s ease;
+    }
+    .skip-link:focus { top: 12px; }
+    :focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+
+  <!-- Lucide pinned to a fixed version so updates can't break the icons -->
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
   <script src="app.js" defer></script>
   <script type="module" src="auth.js"></script>
   <script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./service-worker.js")
-        .then(() => console.log("NEXUS AI offline system ready"))
-        .catch(error => console.error("Offline setup failed:", error));
-    });
-  }
-</script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js")
+          .then(() => console.log("NEXUS AI offline system ready"))
+          .catch(error => console.error("Offline setup failed:", error));
+      });
+    }
+  </script>
 </head>
 <body>
 
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<noscript>
+  <p style="padding:24px;text-align:center;color:#e5e7eb;background:#030712;">
+    NEXUS AI needs JavaScript to run. Please enable JavaScript and reload the page.
+  </p>
+</noscript>
+
+<!-- ============ DOWNLOAD SCREEN ============ -->
 <div id="download-screen" class="download-screen">
   <div class="download-content">
-    <img src="./favicon.png" alt="NEXUS AI" class="download-logo">
+    <img src="./favicon.png" alt="NEXUS AI logo" class="download-logo" width="96" height="96" decoding="async">
 
     <h1>NEXUS <span>AI</span></h1>
 
     <p>INTELLIGENCE WITHOUT LIMITS</p>
 
-    <button
-      type="button"
-      class="download-app-btn main-download-btn"
-      data-install-app
-    >
+    <button type="button" class="download-app-btn main-download-btn" data-install-app>
       ↓ DOWNLOAD NEXUS AI
     </button>
 
@@ -49,36 +89,45 @@
   </div>
 </div>
 
+<!-- ============ AUTH SCREEN ============ -->
 <div id="auth-screen" class="auth-screen">
   <div class="auth-card">
-<div class="auth-logo">
-  <img src="./favicon.png" alt="NEXUS AI">
-</div>
+    <div class="auth-logo">
+      <img src="./favicon.png" alt="NEXUS AI logo" width="64" height="64" decoding="async">
+    </div>
 
     <h1>NEXUS <span>AI</span></h1>
     <p class="auth-subtitle">INTELLIGENCE WITHOUT LIMITS</p>
 
-<button type="button" class="download-app-btn" data-install-app>
-  ↓ DOWNLOAD NEXUS AI
-</button>
-<p class="install-hint" id="installHint">
-  Install NEXUS AI on your device.
-</p>
+    <button type="button" class="download-app-btn" data-install-app>
+      ↓ DOWNLOAD NEXUS AI
+    </button>
+    <p class="install-hint" id="installHint">Install NEXUS AI on your device.</p>
+
     <h2 id="auth-title">Welcome Back</h2>
     <p id="auth-description">Sign in to access your command center.</p>
 
-    <form id="auth-form">
+    <form id="auth-form" aria-labelledby="auth-title">
+      <label class="sr-only" for="auth-email">Email address</label>
       <input
         type="email"
         id="auth-email"
+        name="email"
         placeholder="Email address"
+        autocomplete="email"
+        inputmode="email"
+        autocapitalize="none"
+        spellcheck="false"
         required
       >
 
+      <label class="sr-only" for="auth-password">Password</label>
       <input
         type="password"
         id="auth-password"
+        name="password"
         placeholder="Password"
+        autocomplete="current-password"
         minlength="6"
         required
       >
@@ -90,7 +139,7 @@
       Continue with Google
     </button>
 
-    <p id="auth-error" role="alert"></p>
+    <p id="auth-error" role="alert" aria-live="assertive"></p>
 
     <p class="auth-switch">
       <span id="auth-switch-text">Don't have an account?</span>
@@ -98,340 +147,405 @@
     </p>
   </div>
 </div>
-  
-  <div class="app">
 
-    <aside class="sidebar" id="sidebar">
-      <div class="brand">
-<div class="brand-logo">
-  <img src="./favicon.png" alt="NEXUS AI">
-</div>
+<!-- ============ APP ============ -->
+<div class="app">
+
+  <aside class="sidebar" id="sidebar" aria-label="Primary">
+    <div class="brand">
+      <div class="brand-logo">
+        <img src="./favicon.png" alt="NEXUS AI logo" width="40" height="40" decoding="async">
+      </div>
+      <div>
+        <h2>NEXUS<span> AI</span></h2>
+        <small>INTELLIGENCE PLATFORM</small>
+      </div>
+    </div>
+
+    <div class="nav-label" id="nav-workspace">WORKSPACE</div>
+    <nav aria-labelledby="nav-workspace">
+      <button type="button" class="nav-item active" data-page="dashboard">
+        <i data-lucide="layout-dashboard" aria-hidden="true"></i> Dashboard
+      </button>
+      <button type="button" class="nav-item" data-page="assistant">
+        <i data-lucide="bot" aria-hidden="true"></i> AI Assistant
+      </button>
+      <button type="button" class="nav-item" data-page="tasks">
+        <i data-lucide="check-square" aria-hidden="true"></i> Tasks
+      </button>
+      <button type="button" class="nav-item" data-page="planner">
+        <i data-lucide="calendar-days" aria-hidden="true"></i> Planner
+      </button>
+      <button type="button" class="nav-item" data-page="notes">
+        <i data-lucide="notebook-pen" aria-hidden="true"></i> Workspace
+      </button>
+      <button type="button" class="nav-item" data-page="research">
+        <i data-lucide="search" aria-hidden="true"></i> Research
+      </button>
+    </nav>
+
+    <div class="nav-label" id="nav-management">MANAGEMENT</div>
+    <nav aria-labelledby="nav-management">
+      <button type="button" class="nav-item" data-page="automation">
+        <i data-lucide="workflow" aria-hidden="true"></i> Automation
+      </button>
+      <button type="button" class="nav-item" data-page="analytics">
+        <i data-lucide="chart-no-axes-combined" aria-hidden="true"></i> Analytics
+      </button>
+      <button type="button" class="nav-item" data-page="utilities">
+        <i data-lucide="grid-2x2" aria-hidden="true"></i> Utilities
+      </button>
+      <button type="button" class="nav-item" data-page="security">
+        <i data-lucide="shield-check" aria-hidden="true"></i> Security
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <button type="button" class="nav-item" data-page="settings">
+        <i data-lucide="settings" aria-hidden="true"></i> Settings
+      </button>
+      <div class="user-card">
+        <div class="avatar" aria-hidden="true">Y</div>
         <div>
-          <h2>NEXUS<span> AI</span></h2>
-          <small>INTELLIGENCE PLATFORM</small>
+          <strong>My Workspace</strong>
+          <small>Personal account</small>
         </div>
+        <i data-lucide="chevron-down" aria-hidden="true"></i>
       </div>
+    </div>
+  </aside>
 
-      <div class="nav-label">WORKSPACE</div>
-      <nav>
-        <button class="nav-item active" data-page="dashboard">
-          <i data-lucide="layout-dashboard"></i> Dashboard
-        </button>
-        <button class="nav-item" data-page="assistant">
-          <i data-lucide="bot"></i> AI Assistant
-        </button>
-        <button class="nav-item" data-page="tasks">
-          <i data-lucide="check-square"></i> Tasks
-        </button>
-        <button class="nav-item" data-page="planner">
-          <i data-lucide="calendar-days"></i> Planner
-        </button>
-        <button class="nav-item" data-page="notes">
-          <i data-lucide="notebook-pen"></i> Workspace
-        </button>
-        <button class="nav-item" data-page="research">
-          <i data-lucide="search"></i> Research
-        </button>
-      </nav>
+  <main class="main" id="main-content" tabindex="-1">
 
-      <div class="nav-label">MANAGEMENT</div>
-      <nav>
-        <button class="nav-item" data-page="automation">
-          <i data-lucide="workflow"></i> Automation
+    <header class="topbar">
+      <button type="button" class="icon-btn mobile-menu" id="menuBtn" aria-label="Open menu" aria-controls="sidebar">
+        <i data-lucide="menu" aria-hidden="true"></i>
+      </button>
+      <div class="breadcrumb">NEXUS AI <span aria-hidden="true">/</span> <b id="pageLabel" aria-live="polite">Dashboard</b></div>
+      <div class="top-actions">
+        <button type="button" class="download-app-btn top-download-btn" data-install-app>
+          ↓ DOWNLOAD APP
         </button>
-        <button class="nav-item" data-page="analytics">
-          <i data-lucide="chart-no-axes-combined"></i> Analytics
+        <button type="button" class="icon-btn" id="searchBtn" title="Search" aria-label="Search">
+          <i data-lucide="search" aria-hidden="true"></i>
         </button>
-        <button class="nav-item" data-page="utilities">
-          <i data-lucide="grid-2x2"></i> Utilities
+        <button type="button" class="icon-btn" title="Notifications" aria-label="Notifications">
+          <i data-lucide="bell" aria-hidden="true"></i>
         </button>
-        <button class="nav-item" data-page="security">
-          <i data-lucide="shield-check"></i> Security
-        </button>
-      </nav>
+        <div class="status" role="status"><span aria-hidden="true"></span> SYSTEM ONLINE</div>
+      </div>
+    </header>
 
-      <div class="sidebar-bottom">
-        <button class="nav-item" data-page="settings">
-          <i data-lucide="settings"></i> Settings
-        </button>
-        <div class="user-card">
-          <div class="avatar">Y</div>
+    <div class="content">
+
+      <!-- Dashboard -->
+      <section class="page active" id="dashboard" aria-labelledby="dashboard-title">
+        <div class="welcome">
           <div>
-            <strong>My Workspace</strong>
-            <small>Personal account</small>
+            <div class="eyebrow">YOUR PERSONAL COMMAND CENTER</div>
+            <h1 id="dashboard-title">Welcome to <span>NEXUS.</span></h1>
+            <p>Your intelligent workspace is ready.</p>
           </div>
-          <i data-lucide="chevron-down"></i>
+          <div class="welcome-icon" aria-hidden="true">
+            <i data-lucide="orbit"></i>
+          </div>
         </div>
-      </div>
-    </aside>
 
-    <main class="main">
-
-      <header class="topbar">
-        <button class="icon-btn mobile-menu" id="menuBtn">
-          <i data-lucide="menu"></i>
-        </button>
-        <div class="breadcrumb">NEXUS AI <span>/</span> <b id="pageLabel">Dashboard</b></div>
-        <div class="top-actions">
-      <button type="button" class="download-app-btn top-download-btn" data-install-app>
-  ↓ DOWNLOAD APP
-</button>
-          <button class="icon-btn" id="searchBtn" title="Search">
-            <i data-lucide="search"></i>
-          </button>
-          <button class="icon-btn" title="Notifications">
-            <i data-lucide="bell"></i>
-          </button>
-          <div class="status"><span></span> SYSTEM ONLINE</div>
+        <div class="section-heading">
+          <div>
+            <h2>Overview</h2>
+            <p>Everything important, in one place.</p>
+          </div>
+          <div id="currentDate"></div>
         </div>
-      </header>
 
-      <div class="content">
-
-        <section class="page active" id="dashboard">
-          <div class="welcome">
-            <div>
-              <div class="eyebrow">YOUR PERSONAL COMMAND CENTER</div>
-              <h1>Welcome to <span>NEXUS.</span></h1>
-              <p>Your intelligent workspace is ready.</p>
-            </div>
-            <div class="welcome-icon">
-              <i data-lucide="orbit"></i>
-            </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-top"><span>Active Tasks</span><i data-lucide="list-checks" aria-hidden="true"></i></div>
+            <h2 id="taskCount">0</h2>
+            <small>Your pending tasks</small>
           </div>
-
-          <div class="section-heading">
-            <div>
-              <h2>Overview</h2>
-              <p>Everything important, in one place.</p>
-            </div>
-            <div id="currentDate"></div>
+          <div class="stat-card">
+            <div class="stat-top"><span>Completed</span><i data-lucide="check-circle-2" aria-hidden="true"></i></div>
+            <h2 id="completedCount">0</h2>
+            <small>Tasks completed</small>
           </div>
-
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-top"><span>Active Tasks</span><i data-lucide="list-checks"></i></div>
-              <h2 id="taskCount">0</h2>
-              <small>Your pending tasks</small>
-            </div>
-            <div class="stat-card">
-              <div class="stat-top"><span>Completed</span><i data-lucide="check-circle-2"></i></div>
-              <h2 id="completedCount">0</h2>
-              <small>Tasks completed</small>
-            </div>
-            <div class="stat-card">
-              <div class="stat-top"><span>Saved Notes</span><i data-lucide="notebook"></i></div>
-              <h2 id="noteCount">0</h2>
-              <small>Your knowledge library</small>
-            </div>
-            <div class="stat-card">
-              <div class="stat-top"><span>AI Status</span><i data-lucide="brain-circuit"></i></div>
-              <h2 class="status-text">SETUP</h2>
-              <small>AI connection pending</small>
-            </div>
+          <div class="stat-card">
+            <div class="stat-top"><span>Saved Notes</span><i data-lucide="notebook" aria-hidden="true"></i></div>
+            <h2 id="noteCount">0</h2>
+            <small>Your knowledge library</small>
           </div>
-
-          <div class="dashboard-grid">
-            <div class="panel">
-              <div class="panel-heading">
-                <div><h3>Quick Actions</h3><p>Get things done faster.</p></div>
-              </div>
-              <div class="quick-grid">
-                <button class="quick-action" data-open="assistant">
-                  <i data-lucide="bot"></i><span>Ask AI</span>
-                </button>
-                <button class="quick-action" data-open="tasks">
-                  <i data-lucide="plus-circle"></i><span>New Task</span>
-                </button>
-                <button class="quick-action" data-open="notes">
-                  <i data-lucide="file-plus"></i><span>New Note</span>
-                </button>
-                <button class="quick-action" data-open="planner">
-                  <i data-lucide="calendar-plus"></i><span>Open Planner</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="panel">
-              <div class="panel-heading">
-                <div><h3>System Information</h3><p>Your workspace status.</p></div>
-                <i data-lucide="activity"></i>
-              </div>
-              <div class="info-row"><span>Application</span><b>Operational</b></div>
-              <div class="info-row"><span>Version</span><b>1.0.0</b></div>
-              <div class="info-row"><span>Storage</span><b>Local</b></div>
-              <div class="info-row"><span>AI Integration</span><b class="warning">Not connected</b></div>
-            </div>
+          <div class="stat-card">
+            <div class="stat-top"><span>AI Status</span><i data-lucide="brain-circuit" aria-hidden="true"></i></div>
+            <h2 class="status-text">SETUP</h2>
+            <small>AI connection pending</small>
           </div>
+        </div>
 
-          <div class="panel activity-panel">
+        <div class="dashboard-grid">
+          <div class="panel">
             <div class="panel-heading">
-              <div><h3>Recent Activity</h3><p>Your latest workspace activity.</p></div>
+              <div><h3>Quick Actions</h3><p>Get things done faster.</p></div>
             </div>
-            <div id="activityList" class="empty-state">
-              <i data-lucide="activity"></i>
-              <p>No activity yet. Start using NEXUS AI!</p>
+            <div class="quick-grid">
+              <button type="button" class="quick-action" data-open="assistant">
+                <i data-lucide="bot" aria-hidden="true"></i><span>Ask AI</span>
+              </button>
+              <button type="button" class="quick-action" data-open="tasks">
+                <i data-lucide="plus-circle" aria-hidden="true"></i><span>New Task</span>
+              </button>
+              <button type="button" class="quick-action" data-open="notes">
+                <i data-lucide="file-plus" aria-hidden="true"></i><span>New Note</span>
+              </button>
+              <button type="button" class="quick-action" data-open="planner">
+                <i data-lucide="calendar-plus" aria-hidden="true"></i><span>Open Planner</span>
+              </button>
             </div>
           </div>
-        </section>
 
-        <section class="page" id="assistant">
-          <div class="page-title">
-            <div class="eyebrow">INTELLIGENCE ENGINE</div>
-            <h1>NEXUS <span>Assistant</span></h1>
-            <p>Your personal AI workspace.</p>
+          <div class="panel">
+            <div class="panel-heading">
+              <div><h3>System Information</h3><p>Your workspace status.</p></div>
+              <i data-lucide="activity" aria-hidden="true"></i>
+            </div>
+            <div class="info-row"><span>Application</span><b>Operational</b></div>
+            <div class="info-row"><span>Version</span><b>1.0.0</b></div>
+            <div class="info-row"><span>Storage</span><b>Local</b></div>
+            <div class="info-row"><span>AI Integration</span><b class="warning">Not connected</b></div>
           </div>
-          <div class="chat-panel">
-            <div class="chat-header">
-  <div class="ai-avatar"><i data-lucide="brain-circuit"></i></div>
-  <div>
-    <strong>NEXUS Intelligence</strong>
-    <small>Gemini AI Engine • Secure Backend</small>
-  </div>
-  <span class="success">SYSTEM ONLINE</span>
-</div>
-            <div class="chat-messages" id="chatMessages">
-              <div class="ai-message">
-                <div class="ai-avatar"><i data-lucide="bot"></i></div>
-                <div class="message-bubble">
-                  <strong>Welcome to NEXUS AI.</strong>
-                  <p>Your intelligent workspace is ready. The real AI engine will be connected after we configure the secure backend.</p>
-                </div>
+        </div>
+
+        <div class="panel activity-panel">
+          <div class="panel-heading">
+            <div><h3>Recent Activity</h3><p>Your latest workspace activity.</p></div>
+          </div>
+          <div id="activityList" class="empty-state" aria-live="polite">
+            <i data-lucide="activity" aria-hidden="true"></i>
+            <p>No activity yet. Start using NEXUS AI!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- AI Assistant -->
+      <section class="page" id="assistant" aria-labelledby="assistant-title">
+        <div class="page-title">
+          <div class="eyebrow">INTELLIGENCE ENGINE</div>
+          <h1 id="assistant-title">NEXUS <span>Assistant</span></h1>
+          <p>Your personal AI workspace.</p>
+        </div>
+        <div class="chat-panel">
+          <div class="chat-header">
+            <div class="ai-avatar" aria-hidden="true"><i data-lucide="brain-circuit"></i></div>
+            <div>
+              <strong>NEXUS Intelligence</strong>
+              <small>Gemini AI Engine • Secure Backend</small>
+            </div>
+            <span class="success">SYSTEM ONLINE</span>
+          </div>
+          <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Conversation with NEXUS">
+            <div class="ai-message">
+              <div class="ai-avatar" aria-hidden="true"><i data-lucide="bot"></i></div>
+              <div class="message-bubble">
+                <strong>Welcome to NEXUS AI.</strong>
+                <p>Your intelligent workspace is ready. The real AI engine will be connected after we configure the secure backend.</p>
               </div>
             </div>
-            <form id="chatForm" class="chat-input">
-              <input id="chatInput" placeholder="Ask NEXUS anything..." autocomplete="off">
-              <button type="submit" aria-label="Send"><i data-lucide="send"></i></button>
-            </form>
-            <div class="chat-disclaimer">AI connectivity is not yet configured. No messages are sent to an AI provider.</div>
           </div>
-        </section>
+          <form id="chatForm" class="chat-input">
+            <label class="sr-only" for="chatInput">Message NEXUS</label>
+            <input id="chatInput" name="message" placeholder="Ask NEXUS anything..." autocomplete="off" maxlength="4000">
+            <button type="submit" aria-label="Send message"><i data-lucide="send" aria-hidden="true"></i></button>
+          </form>
+          <div class="chat-disclaimer">AI connectivity is not yet configured. No messages are sent to an AI provider.</div>
+        </div>
+      </section>
 
-        <section class="page" id="tasks">
-          <div class="page-title"><div class="eyebrow">PRODUCTIVITY</div><h1>Task <span>Manager</span></h1><p>Organize your priorities and get things done.</p></div>
+      <!-- Tasks -->
+      <section class="page" id="tasks" aria-labelledby="tasks-title">
+        <div class="page-title">
+          <div class="eyebrow">PRODUCTIVITY</div>
+          <h1 id="tasks-title">Task <span>Manager</span></h1>
+          <p>Organize your priorities and get things done.</p>
+        </div>
+        <div class="panel">
+          <form id="taskForm" class="create-form">
+            <label class="sr-only" for="taskInput">Task description</label>
+            <input id="taskInput" placeholder="What needs to be done?" autocomplete="off" required>
+            <label class="sr-only" for="taskPriority">Priority</label>
+            <select id="taskPriority">
+              <option>Normal</option>
+              <option>High</option>
+              <option>Low</option>
+            </select>
+            <button class="primary-btn" type="submit"><i data-lucide="plus" aria-hidden="true"></i> Add Task</button>
+          </form>
+          <div id="taskList" class="item-list" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- Planner -->
+      <section class="page" id="planner" aria-labelledby="planner-title">
+        <div class="page-title">
+          <div class="eyebrow">TIME MANAGEMENT</div>
+          <h1 id="planner-title">Smart <span>Planner</span></h1>
+          <p>Plan your day with clarity.</p>
+        </div>
+        <div class="panel">
+          <h3>Today's Schedule</h3>
+          <p id="plannerDate"></p>
+          <div id="plannerList" class="empty-state">No events scheduled yet.</div>
+        </div>
+      </section>
+
+      <!-- Notes -->
+      <section class="page" id="notes" aria-labelledby="notes-title">
+        <div class="page-title">
+          <div class="eyebrow">KNOWLEDGE MANAGEMENT</div>
+          <h1 id="notes-title">Personal <span>Workspace</span></h1>
+          <p>Your ideas, notes and knowledge.</p>
+        </div>
+        <div class="panel">
+          <form id="noteForm" class="create-form">
+            <label class="sr-only" for="noteInput">New note</label>
+            <input id="noteInput" placeholder="Write a new note..." autocomplete="off" required>
+            <button class="primary-btn" type="submit"><i data-lucide="plus" aria-hidden="true"></i> Save Note</button>
+          </form>
+          <div id="noteList" class="item-list" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- Research -->
+      <section class="page" id="research" aria-labelledby="research-title">
+        <div class="page-title">
+          <div class="eyebrow">KNOWLEDGE DISCOVERY</div>
+          <h1 id="research-title">Research <span>Center</span></h1>
+          <p>Organize your research and discoveries.</p>
+        </div>
+        <div class="panel">
+          <h3>Research Workspace</h3>
+          <p>Save research links and organize your sources. AI-assisted research will be available after backend integration.</p>
+          <label class="sr-only" for="researchInput">Research URL</label>
+          <input id="researchInput" type="url" placeholder="Paste a research URL..." autocomplete="off" inputmode="url">
+          <button type="button" class="primary-btn" id="saveResearch">Save Source</button>
+          <div id="researchList" class="item-list" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- Automation -->
+      <section class="page" id="automation" aria-labelledby="automation-title">
+        <div class="page-title">
+          <div class="eyebrow">WORKFLOW ENGINE</div>
+          <h1 id="automation-title">Automation <span>Center</span></h1>
+          <p>Manage your future automated workflows.</p>
+        </div>
+        <div class="panel">
+          <h3>Automation Hub</h3>
+          <p>Workflow scheduling and automated actions will be introduced in a later phase.</p>
+        </div>
+      </section>
+
+      <!-- Analytics -->
+      <section class="page" id="analytics" aria-labelledby="analytics-title">
+        <div class="page-title">
+          <div class="eyebrow">PERFORMANCE</div>
+          <h1 id="analytics-title">Workspace <span>Analytics</span></h1>
+          <p>Understand your productivity.</p>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card"><span>Tasks created</span><h2 id="analyticsTasks">0</h2></div>
+          <div class="stat-card"><span>Tasks completed</span><h2 id="analyticsCompleted">0</h2></div>
+          <div class="stat-card"><span>Notes saved</span><h2 id="analyticsNotes">0</h2></div>
+        </div>
+        <div class="panel">
+          <h3>Productivity overview</h3>
+          <p>These statistics are calculated from your actual locally saved workspace data.</p>
+        </div>
+      </section>
+
+      <!-- Utilities -->
+      <section class="page" id="utilities" aria-labelledby="utilities-title">
+        <div class="page-title">
+          <div class="eyebrow">EVERYDAY TOOLS</div>
+          <h1 id="utilities-title">Utility <span>Center</span></h1>
+          <p>Useful tools in one place.</p>
+        </div>
+        <div class="stats-grid">
           <div class="panel">
-            <form id="taskForm" class="create-form">
-              <input id="taskInput" placeholder="What needs to be done?" required>
-              <select id="taskPriority"><option>Normal</option><option>High</option><option>Low</option></select>
-              <button class="primary-btn" type="submit"><i data-lucide="plus"></i> Add Task</button>
-            </form>
-            <div id="taskList" class="item-list"></div>
+            <h3>Calculator</h3>
+            <label class="sr-only" for="calcInput">Expression</label>
+            <input id="calcInput" placeholder="Example: 25 * 4" autocomplete="off" inputmode="text">
+            <button type="button" class="primary-btn" id="calculateBtn">Calculate</button>
+            <p id="calcResult" aria-live="polite">Result will appear here.</p>
           </div>
-        </section>
-
-        <section class="page" id="planner">
-          <div class="page-title"><div class="eyebrow">TIME MANAGEMENT</div><h1>Smart <span>Planner</span></h1><p>Plan your day with clarity.</p></div>
           <div class="panel">
-            <h3>Today's Schedule</h3>
-            <p id="plannerDate"></p>
-            <div id="plannerList" class="empty-state">No events scheduled yet.</div>
+            <h3>Word Counter</h3>
+            <label class="sr-only" for="wordInput">Text to count</label>
+            <textarea id="wordInput" placeholder="Enter your text..."></textarea>
+            <p id="wordResult" aria-live="polite">0 words · 0 characters</p>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="page" id="notes">
-          <div class="page-title"><div class="eyebrow">KNOWLEDGE MANAGEMENT</div><h1>Personal <span>Workspace</span></h1><p>Your ideas, notes and knowledge.</p></div>
-          <div class="panel">
-            <form id="noteForm" class="create-form">
-              <input id="noteInput" placeholder="Write a new note..." required>
-              <button class="primary-btn" type="submit"><i data-lucide="plus"></i> Save Note</button>
-            </form>
-            <div id="noteList" class="item-list"></div>
+      <!-- Security -->
+      <section class="page" id="security" aria-labelledby="security-title">
+        <div class="page-title">
+          <div class="eyebrow">PRIVACY & PROTECTION</div>
+          <h1 id="security-title">Security <span>Center</span></h1>
+          <p>Manage your NEXUS AI security and privacy.</p>
+        </div>
+
+        <div class="panel">
+          <h3>Security overview</h3>
+
+          <div class="info-row">
+            <span>AI API key</span>
+            <b class="success">Securely stored in Cloudflare</b>
           </div>
-        </section>
-
-        <section class="page" id="research">
-          <div class="page-title"><div class="eyebrow">KNOWLEDGE DISCOVERY</div><h1>Research <span>Center</span></h1><p>Organize your research and discoveries.</p></div>
-          <div class="panel">
-            <h3>Research Workspace</h3>
-            <p>Save research links and organize your sources. AI-assisted research will be available after backend integration.</p>
-            <input id="researchInput" placeholder="Paste a research URL...">
-            <button class="primary-btn" id="saveResearch">Save Source</button>
-            <div id="researchList" class="item-list"></div>
+          <div class="info-row">
+            <span>AI backend</span>
+            <b class="success">Cloudflare Worker deployed</b>
           </div>
-        </section>
-
-        <section class="page" id="automation">
-          <div class="page-title"><div class="eyebrow">WORKFLOW ENGINE</div><h1>Automation <span>Center</span></h1><p>Manage your future automated workflows.</p></div>
-          <div class="panel"><h3>Automation Hub</h3><p>Workflow scheduling and automated actions will be introduced in a later phase.</p></div>
-        </section>
-
-        <section class="page" id="analytics">
-          <div class="page-title"><div class="eyebrow">PERFORMANCE</div><h1>Workspace <span>Analytics</span></h1><p>Understand your productivity.</p></div>
-          <div class="stats-grid">
-            <div class="stat-card"><span>Tasks created</span><h2 id="analyticsTasks">0</h2></div>
-            <div class="stat-card"><span>Tasks completed</span><h2 id="analyticsCompleted">0</h2></div>
-            <div class="stat-card"><span>Notes saved</span><h2 id="analyticsNotes">0</h2></div>
+          <div class="info-row">
+            <span>Account authentication</span>
+            <b class="success">Firebase Authentication active</b>
           </div>
-          <div class="panel"><h3>Productivity overview</h3><p>These statistics are calculated from your actual locally saved workspace data.</p></div>
-        </section>
-
-        <section class="page" id="utilities">
-          <div class="page-title"><div class="eyebrow">EVERYDAY TOOLS</div><h1>Utility <span>Center</span></h1><p>Useful tools in one place.</p></div>
-          <div class="stats-grid">
-            <div class="panel"><h3>Calculator</h3><input id="calcInput" placeholder="Example: 25 * 4"><button class="primary-btn" id="calculateBtn">Calculate</button><p id="calcResult">Result will appear here.</p></div>
-            <div class="panel"><h3>Word Counter</h3><textarea id="wordInput" placeholder="Enter your text..."></textarea><p id="wordResult">0 words · 0 characters</p></div>
+          <div class="info-row">
+            <span>Local storage</span>
+            <b class="success">Enabled</b>
           </div>
-        </section>
+          <div class="info-row">
+            <span>AI provider</span>
+            <b>Google Gemini</b>
+          </div>
 
-        
-<section class="page" id="security">
-  <div class="page-title">
-    <div class="eyebrow">PRIVACY & PROTECTION</div>
-    <h1>Security <span>Center</span></h1>
-    <p>Manage your NEXUS AI security and privacy.</p>
-  </div>
+          <p>
+            NEXUS AI uses a secure Cloudflare backend to communicate with
+            Google Gemini. Your Gemini API key is stored as a Cloudflare
+            secret and is not exposed in the public frontend code.
+          </p>
+        </div>
+      </section>
 
-  <div class="panel">
-    <h3>Security overview</h3>
+      <!-- Settings -->
+      <section class="page" id="settings" aria-labelledby="settings-title">
+        <div class="page-title">
+          <div class="eyebrow">PREFERENCES</div>
+          <h1 id="settings-title">System <span>Settings</span></h1>
+          <p>Configure your NEXUS experience.</p>
+        </div>
+        <div class="panel">
+          <h3>Workspace preferences</h3>
+          <div class="info-row"><span>Theme</span><b>Dark / Blue</b></div>
+          <div class="info-row"><span>Application version</span><b>1.0.0</b></div>
+          <button type="button" class="primary-btn" id="exportData">Export My Data</button>
+          <button type="button" class="danger-btn" id="clearData">Clear Local Workspace Data</button>
+        </div>
+      </section>
 
-    <div class="info-row">
-      <span>AI API key</span>
-      <b class="success">Securely stored in Cloudflare</b>
+      <footer>NEXUS AI <span aria-hidden="true">•</span> INTELLIGENCE WITHOUT LIMITS <span aria-hidden="true">•</span> VERSION 1.0.0</footer>
     </div>
+  </main>
+</div>
 
-    <div class="info-row">
-      <span>AI backend</span>
-      <b class="success">Cloudflare Worker deployed</b>
-    </div>
-
-    <div class="info-row">
-      <span>Account authentication</span>
-      <b class="success">Firebase Authentication active</b>
-    </div>
-
-    <div class="info-row">
-      <span>Local storage</span>
-      <b class="success">Enabled</b>
-    </div>
-
-    <div class="info-row">
-      <span>AI provider</span>
-      <b>Google Gemini</b>
-    </div>
-
-    <p>
-      NEXUS AI uses a secure Cloudflare backend to communicate with
-      Google Gemini. Your Gemini API key is stored as a Cloudflare
-      secret and is not exposed in the public frontend code.
-    </p>
-  </div>
-</section>
-
-
-        <section class="page" id="settings">
-          <div class="page-title"><div class="eyebrow">PREFERENCES</div><h1>System <span>Settings</span></h1><p>Configure your NEXUS experience.</p></div>
-          <div class="panel">
-            <h3>Workspace preferences</h3>
-            <div class="info-row"><span>Theme</span><b>Dark / Blue</b></div>
-            <div class="info-row"><span>Application version</span><b>1.0.0</b></div>
-            <button class="primary-btn" id="exportData">Export My Data</button>
-            <button class="danger-btn" id="clearData">Clear Local Workspace Data</button>
-          </div>
-        </section>
-
-        <footer>NEXUS AI <span>•</span> INTELLIGENCE WITHOUT LIMITS <span>•</span> VERSION 1.0.0</footer>
-      </div>
-    </main>
-  </div>
 </body>
 </html>
