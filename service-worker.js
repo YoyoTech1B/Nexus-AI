@@ -1,7 +1,7 @@
 
 "use strict";
 
-const CACHE_NAME = "nexus-ai-v2";
+const CACHE_NAME = "nexus-ai-v3";
 
 const APP_FILES = [
   "./",
