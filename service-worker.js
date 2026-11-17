@@ -4,7 +4,7 @@
    NEXUS AI — SERVICE WORKER
 ========================================= */
 
-const VERSION = "v8";
+const VERSION = "v9";
 const APP_CACHE = `nexus-ai-app-${VERSION}`;
 const LIB_CACHE = "nexus-ai-lib-v1"; // pinned third-party libraries (versioned URLs never change)
 const KEEP_CACHES = [APP_CACHE, LIB_CACHE];
